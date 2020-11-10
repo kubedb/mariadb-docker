@@ -60,6 +60,8 @@ log "INFO" "Trying to start group with peers'${peers[*]}'"
 
 # comma separated host names
 export hosts=$(echo -n ${peers[*]} | sed -e "s/ /,/g")
+myips=$(hostname -I)
+first=${myips%% *}
 
 
 cat >>/etc/mysql/conf.d/galera.cnf <<EOL
@@ -78,16 +80,46 @@ wsrep_cluster_name=$CLUSTER_NAME
 wsrep_cluster_address="gcomm://${hosts}"
 
 # Galera Synchronization Configuration
-wsrep_node_address=${cur_host}
+wsrep_node_address=${first}
 wsrep_sst_method=rsync
 EOL
 
 host-len=${#peers[@]}
 
-if [[ $host-len -eq 0 ]]; then
-    docker-entrypoint.sh  mysqld --wsrep-new-cluster
+if [[ $host-len -eq 1 ]]; then
     log "INFO" "Creating --wsrep-new-cluster"
+    docker-entrypoint.sh  mysqld --wsrep-new-cluster &
+    # run the mysqld in background
+else
+    log "INFO" "Creating Added to the cluster"
+    docker-entrypoint.sh mysqld &
+    # run the mysqld in background
 fi
+
+#saving the process id running in background
+pid=$!
+log "INFO" "The process id of mysqld is '$pid'"
+
+# wait for all mysql servers be running (alive)
+for host in ${peers[*]}; do
+    for i in {900..0}; do
+        out=$(mysql -u ${USER} --password=${PASSWORD} --host=${host} -N -e "select 1;" 2>/dev/null)
+        if [[ "$out" == "1" ]]; then
+            break
+        fi
+        log "INFO" "-n issue comes here-------------------"
+        echo -n .
+        sleep 1
+    done
+
+    if [[ "$i" == "0" ]]; then
+        echo ""
+        log "ERROR" "Server ${host} start failed..."
+        exit 1
+    fi
+done
+
+log "INFO" "All servers (${peers[*]}) are ready"
 
 
 
