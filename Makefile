@@ -1,7 +1,7 @@
 SHELL=/bin/bash -o pipefail
 
 REGISTRY ?= kubedb
-BIN      := percona-xtradb-cluster
+BIN      := mariadb
 IMAGE    := $(REGISTRY)/$(BIN)
 TAG      := 10.5.6
 

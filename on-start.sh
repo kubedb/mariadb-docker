@@ -14,7 +14,6 @@
 #   MYSQL_ROOT_PASSWORD = root password
 
 script_name=${0##*/}
-NAMESPACE="$POD_NAMESPACE"
 USER="$MYSQL_ROOT_USERNAME"
 PASSWORD="$MYSQL_ROOT_PASSWORD"
 
@@ -33,6 +32,8 @@ if [ -z "$CLUSTER_NAME" ]; then
   exit 1
 fi
 
+echo "<--------The cluster name is '$CLUSTER_NAME'-------------->"
+
 # get_host_name() expects only one argument and that is the index of the Pod of StatefulSet.
 # And it forms the FQDN (Fully Qualified Domain Name) of the $1'th Pod of StatefulSet.
 function get_host_name() {
@@ -42,6 +43,8 @@ function get_host_name() {
 
 # get the host names from stdin sent by peer-finder program
 cur_hostname=$(hostname)
+echo "<--------The current host name is '$cur_hostname'-------------->"
+
 export cur_host=
 log "INFO" "Reading standard input..."
 while read -ra line; do
@@ -92,7 +95,7 @@ if [[ $host_len -eq 1 ]]; then
     pid=$!
     # run the mysqld in background
 else
-    log "INFO" "Creating Added to the cluster"
+    log "INFO" "Adding '$cur_host' to the cluster"
     docker-entrypoint.sh mysqld &
     pid=$!
     # run the mysqld in background
@@ -106,10 +109,11 @@ for host in ${peers[*]}; do
     for i in {900..0}; do
 #        out=$(mysql -N -e "select 1;" 2>/dev/null)
         out=$(mysql -u ${USER} --password=${PASSWORD} --host=${host} -N -e "select 1;" 2>/dev/null)
+        log "INFO" "<--trying to ping '$host', Step='$i', '$out'-->"
         if [[ "$out" == "1" ]]; then
             break
         fi
-        log "INFO" "-n issue comes here-------------------"
+
         echo -n .
         sleep 1
     done
