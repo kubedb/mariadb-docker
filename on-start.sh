@@ -95,6 +95,9 @@ if [[ $host_len -eq 1 ]]; then
     pid=$!
     # run the mysqld in background
 else
+    if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
+       export DATABASE_ALREADY_EXISTS=true
+    fi
     log "INFO" "Adding '$cur_host' to the cluster"
     docker-entrypoint.sh mysqld &
     pid=$!
@@ -108,7 +111,7 @@ log "INFO" "The process id of mysqld is '$pid'"
 for host in ${peers[*]}; do
     for i in {900..0}; do
 #        out=$(mysql -N -e "select 1;" 2>/dev/null)
-        out=$(mysql -u ${USER} --password=${PASSWORD} --host=${host} -N -e "select 1;" 2>/dev/null)
+        out=$(mysql -u${MYSQL_ROOT_USERNAME} -p${MYSQL_ROOT_PASSWORD} --host=${host} -N -e "select 1;" 2>/dev/null)
         log "INFO" "<--trying to ping '$host', Step='$i', '$out'-->"
         if [[ "$out" == "1" ]]; then
             break
@@ -117,7 +120,6 @@ for host in ${peers[*]}; do
         echo -n .
         sleep 1
     done
-
     if [[ "$i" == "0" ]]; then
         echo ""
         log "ERROR" "Server ${host} start failed..."
