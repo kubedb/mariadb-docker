@@ -95,9 +95,7 @@ if [[ $host_len -eq 1 ]]; then
     pid=$!
     # run the mysqld in background
 else
-    if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
-       export DATABASE_ALREADY_EXISTS=true
-    fi
+    export DATABASE_ALREADY_EXISTS=true
     log "INFO" "Adding '$cur_host' to the cluster"
     docker-entrypoint.sh mysqld &
     pid=$!

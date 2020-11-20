@@ -19,29 +19,28 @@ function check_property() {
     fi
 }
 
-export MYSQL_PWD="${MYSQL_ROOT_PASSWORD}"
-
-READ_ONLY=$(mysql -uroot -p${MYSQL_ROOT_PASSWORD} -nsNLEe "select 1;" | grep -v "*")
+READ_ONLY=$(mysql -uroot -p${MYSQL_ROOT_PASSWORD} -Ne "select 1;" | awk '{print $1}')
 EXPECTED_READ_ONLY="1"
 check_property "select 1" $EXPECTED_READ_ONLY $READ_ONLY
 
-WSREP_LOCAL_STATE=$(mysql -uroot -p${MYSQL_ROOT_PASSWORD}  -nsNLEe "show status like 'wsrep_local_state';" | grep -v "*")
+# TODO: Check why 2 or 4 in wsrep_local_state
+WSREP_LOCAL_STATE=$(mysql -uroot -p${MYSQL_ROOT_PASSWORD}  -Ne "show status like 'wsrep_local_state';" | awk '{print $2}')
 EXPECTED_WSREP_LOCAL_STATE="2|4"
 check_property "wsrep_local_state" $EXPECTED_WSREP_LOCAL_STATE $WSREP_LOCAL_STATE
 
-WSREP_EVS_STATE=$(mysql -p${MYSQL_ROOT_PASSWORD} -uroot -nsNLEe "show status like 'wsrep_evs_state';" | grep -v "*")
+WSREP_EVS_STATE=$(mysql -uroot -p${MYSQL_ROOT_PASSWORD}  -Ne "show status like 'wsrep_evs_state';" | awk '{print $2}')
 EXPECTED_WSREP_EVS_STATE="OPERATIONAL"
 check_property "wsrep_evs_state" $EXPECTED_WSREP_EVS_STATE $WSREP_EVS_STATE
 
-WSREP_CLUSTER_STATUS=$(mysql -p${MYSQL_ROOT_PASSWORD} -uroot -nsNLEe "show status like 'wsrep_cluster_status';" | grep -v "*")
+WSREP_CLUSTER_STATUS=$(mysql -uroot -p${MYSQL_ROOT_PASSWORD}  -Ne "show status like 'wsrep_cluster_status';" | awk '{print $2}')
 EXPECTED_WSREP_CLUSTER_STATUS="Primary"
 check_property "wsrep_cluster_status" $EXPECTED_WSREP_CLUSTER_STATUS $WSREP_CLUSTER_STATUS
 
 
-WSREP_READY=$(mysql -uroot  -p${MYSQL_ROOT_PASSWORD} -nsNLEe "show status like 'wsrep_connected';" | grep -v "*")
+WSREP_CONNECTED=$(mysql -uroot -p${MYSQL_ROOT_PASSWORD}  -Ne "show status like 'wsrep_connected';" | awk '{print $2}')
 EXPECTED_WSREP_CONNECTED="ON"
-check_property "wsrep_connected" $EXPECTED_WSREP_READY $WSREP_READY
+check_property "wsrep_connected" $EXPECTED_WSREP_CONNECTED $WSREP_CONNECTED
 
-WSREP_READY=$(mysql -uroot  -p${MYSQL_ROOT_PASSWORD} -nsNLEe "show status like 'wsrep_ready';" | grep -v "*")
+WSREP_READY=$(mysql -uroot -p${MYSQL_ROOT_PASSWORD}  -Ne "show status like 'wsrep_ready';" | awk '{print $2}')
 EXPECTED_WSREP_READY="ON"
 check_property "wsrep_ready" $EXPECTED_WSREP_READY $WSREP_READY
