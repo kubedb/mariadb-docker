@@ -1,4 +1,4 @@
-FROM mariadb:10.4.17
+FROM mariadb:10.5
 
 VOLUME /etc/mysql
 
