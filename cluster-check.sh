@@ -28,6 +28,8 @@ WSREP_LOCAL_STATE=$(mysql -uroot -p${MYSQL_ROOT_PASSWORD}  -Ne "show status like
 EXPECTED_WSREP_LOCAL_STATE="2|4"
 check_property "wsrep_local_state" $EXPECTED_WSREP_LOCAL_STATE $WSREP_LOCAL_STATE
 
+
+# auto-eviction - https://galeracluster.com/library/documentation/auto-eviction.html
 WSREP_EVS_STATE=$(mysql -uroot -p${MYSQL_ROOT_PASSWORD}  -Ne "show status like 'wsrep_evs_state';" | awk '{print $2}')
 EXPECTED_WSREP_EVS_STATE="OPERATIONAL"
 check_property "wsrep_evs_state" $EXPECTED_WSREP_EVS_STATE $WSREP_EVS_STATE

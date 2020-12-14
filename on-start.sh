@@ -70,6 +70,10 @@ EOL
 host_len=${#peers[@]}
 
 if [[ $host_len -eq 1 ]]; then
+    # Starting with provider version 3.19, Galera has an additional protection against attempting to boostrap the cluster using a node
+    # that may not have been the last node remaining in the cluster prior to cluster shutdown.
+    # ref: https://galeracluster.com/library/training/tutorials/restarting-cluster.html#restarting-the-cluster
+    sed -i -e 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/g' /var/lib/mysql/grastate.dat
     log "INFO" "Creating new cluster using --wsrep-new-cluster"
     docker-entrypoint.sh  mysqld --wsrep-new-cluster &
     # saving the process id running in background for further process...
