@@ -75,7 +75,7 @@ if [[ $host_len -eq 1 ]]; then
     # ref: https://galeracluster.com/library/training/tutorials/restarting-cluster.html#restarting-the-cluster
     sed -i -e 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/g' /var/lib/mysql/grastate.dat
     log "INFO" "Creating new cluster using --wsrep-new-cluster"
-    docker-entrypoint.sh  mysqld --wsrep-new-cluster &
+    docker-entrypoint.sh  mysqld --wsrep-new-cluster $@ &
     # saving the process id running in background for further process...
     pid=$!
 else
@@ -83,7 +83,7 @@ else
     export DATABASE_ALREADY_EXISTS=true
 
     log "INFO" "Adding new node ***'$cur_host'*** to the cluster"
-    docker-entrypoint.sh mysqld &
+    docker-entrypoint.sh mysqld $@ &
     # saving the process id running in background for further process...
     pid=$!
 fi

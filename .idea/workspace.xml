@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="741c12e9-e24a-436b-bcaa-f489671d29a1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cluster-check.sh" beforeDir="false" afterPath="$PROJECT_DIR$/cluster-check.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/on-start.sh" beforeDir="false" afterPath="$PROJECT_DIR$/on-start.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -33,5 +32,19 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="169" y="100" width="1648" height="880" key="DiffContextDialog" timestamp="1609734309942">
+      <screen x="72" y="27" width="1848" height="1053" />
+    </state>
+    <state x="169" y="100" width="1648" height="880" key="DiffContextDialog/1920.0.1920.1080/72.27.1848.1053@72.27.1848.1053" timestamp="1609734309942" />
+    <state x="779" y="298" width="424" height="491" key="FileChooserDialogImpl" timestamp="1609413096668">
+      <screen x="72" y="27" width="1848" height="1053" />
+    </state>
+    <state x="779" y="298" width="424" height="491" key="FileChooserDialogImpl/1920.0.1920.1080/72.27.1848.1053@72.27.1848.1053" timestamp="1609413096668" />
+    <state x="770" y="257" width="442" height="573" key="VcsDiffUtil.ChangesDialog" timestamp="1609733087245">
+      <screen x="72" y="27" width="1848" height="1053" />
+    </state>
+    <state x="770" y="257" width="442" height="573" key="VcsDiffUtil.ChangesDialog/1920.0.1920.1080/72.27.1848.1053@72.27.1848.1053" timestamp="1609733087245" />
   </component>
 </project>
