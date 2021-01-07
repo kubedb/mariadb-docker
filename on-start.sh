@@ -69,6 +69,7 @@ EOL
 
 host_len=${#peers[@]}
 
+
 if [[ $host_len -eq 1 ]]; then
     # Starting with provider version 3.19, Galera has an additional protection against attempting to boostrap the cluster using a node
     # that may not have been the last node remaining in the cluster prior to cluster shutdown.
@@ -88,12 +89,16 @@ else
     pid=$!
 fi
 
-
-
+args=$@
 # wait for all mysql servers be running (alive)
 for host in ${peers[*]}; do
     for i in {900..0}; do
-        out=$(mysql -u${MYSQL_ROOT_USERNAME} -p${MYSQL_ROOT_PASSWORD} --host=${host} -N -e "select 1;" 2>/dev/null)
+        tlsCred=""
+        if [[ "$args" == *"--require-secure-transport"* ]]; then
+          tlsCred="--ssl-ca=/etc/mysql/certs/client/ca.crt  --ssl-cert=/etc/mysql/certs/client/tls.crt --ssl-key=/etc/mysql/certs/client/tls.key"
+        fi
+        out=$(mysql -u${MYSQL_ROOT_USERNAME} -p${MYSQL_ROOT_PASSWORD} --host=${host} ${tlsCred} -N -e "select 1;" 2>/dev/null)
+        echo $out
         log "INFO" "=======trying to ping ***'$host'***, Step='$i', Got='$out'"
         if [[ "$out" == "1" ]]; then
             break
