@@ -30,9 +30,9 @@ export cur_host=
 log "INFO" "Reading standard input..."
 while read -ra line; do
     if [[ "${line}" == *"${cur_hostname}"* ]]; then
-        cur_host=$(echo -n ${line} | sed -e "s/.svc.cluster.local//g")
+        cur_host=$(echo -n ${line%.svc*})
     fi
-    tmp=$(echo -n ${line} | sed -e "s/.svc.cluster.local//g")
+    tmp=$(echo -n ${line%.svc*})
     peers=("${peers[@]}" "$tmp")
 
 done
