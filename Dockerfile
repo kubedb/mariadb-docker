@@ -4,4 +4,3 @@ VOLUME /etc/mysql
 
 COPY on-start.sh /
 COPY peer-finder /usr/local/bin/
-COPY cluster-check.sh /
