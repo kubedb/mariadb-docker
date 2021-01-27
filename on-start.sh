@@ -18,10 +18,9 @@ function log() {
 }
 
 if [ -z "$CLUSTER_NAME" ]; then
-  echo >&2 'Error:  You need to specify CLUSTER_NAME'
-  exit 1
+    echo >&2 'Error:  You need to specify CLUSTER_NAME'
+    exit 1
 fi
-
 
 # get the host names from stdin sent by peer-finder program
 cur_hostname=$(hostname)
@@ -39,12 +38,10 @@ done
 
 log "INFO" "Trying to start group with peers'${peers[*]}'"
 
-
 # comma separated host names
 export hosts=$(echo -n ${peers[*]} | sed -e "s/ /,/g")
 myips=$(hostname -I)
 first=${myips%% *}
-
 
 # write on galera configuration file
 cat >>/etc/mysql/conf.d/galera.cnf <<EOL
@@ -69,14 +66,13 @@ EOL
 
 host_len=${#peers[@]}
 
-
 if [[ $host_len -eq 1 ]]; then
     # Starting with provider version 3.19, Galera has an additional protection against attempting to boostrap the cluster using a node
     # that may not have been the last node remaining in the cluster prior to cluster shutdown.
     # ref: https://galeracluster.com/library/training/tutorials/restarting-cluster.html#restarting-the-cluster
     sed -i -e 's/safe_to_bootstrap: 0/safe_to_bootstrap: 1/g' /var/lib/mysql/grastate.dat
     log "INFO" "Creating new cluster using --wsrep-new-cluster"
-    docker-entrypoint.sh  mysqld --wsrep-new-cluster $@ &
+    docker-entrypoint.sh mysqld --wsrep-new-cluster $@ &
     # saving the process id running in background for further process...
     pid=$!
 else
@@ -95,7 +91,7 @@ for host in ${peers[*]}; do
     for i in {900..0}; do
         tlsCred=""
         if [[ "$args" == *"--require-secure-transport"* ]]; then
-          tlsCred="--ssl-ca=/etc/mysql/certs/client/ca.crt  --ssl-cert=/etc/mysql/certs/client/tls.crt --ssl-key=/etc/mysql/certs/client/tls.key"
+            tlsCred="--ssl-ca=/etc/mysql/certs/client/ca.crt  --ssl-cert=/etc/mysql/certs/client/tls.crt --ssl-key=/etc/mysql/certs/client/tls.key"
         fi
         out=$(mysql -u${MYSQL_ROOT_USERNAME} -p${MYSQL_ROOT_PASSWORD} --host=${host} ${tlsCred} -N -e "select 1;" 2>/dev/null)
         echo $out
@@ -113,9 +109,7 @@ for host in ${peers[*]}; do
     fi
 done
 
-
 log "INFO" "All servers are ready -> (${peers[*]})"
-
 
 # wait for mysqld process running in background
 log "INFO" "SUCCESS: mysqld process [pid = '$pid'] running in background ..."
