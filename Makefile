@@ -3,7 +3,7 @@ SHELL=/bin/bash -o pipefail
 REGISTRY ?= kubedb
 BIN      := mariadb
 IMAGE    := $(REGISTRY)/$(BIN)
-TAG      := 10.5.8
+TAG      := $(shell git describe --exact-match --abbrev=0 2>/dev/null || echo "")
 
 .PHONY: push
 push: container
