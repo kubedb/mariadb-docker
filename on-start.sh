@@ -94,8 +94,7 @@ for host in ${peers[*]}; do
             tlsCred="--ssl-ca=/etc/mysql/certs/client/ca.crt  --ssl-cert=/etc/mysql/certs/client/tls.crt --ssl-key=/etc/mysql/certs/client/tls.key"
         fi
         out=$(mysql -u${MYSQL_ROOT_USERNAME} -p${MYSQL_ROOT_PASSWORD} --host=${host} ${tlsCred} -N -e "select 1;" 2>/dev/null)
-        echo $out
-        log "INFO" "=======trying to ping ***'$host'***, Step='$i', Got='$out'"
+        log "INFO" "Trying to ping ***'$host'***, Step='$i', Got='$out'"
         if [[ "$out" == "1" ]]; then
             break
         fi

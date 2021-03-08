@@ -3,7 +3,7 @@ SHELL=/bin/bash -o pipefail
 REGISTRY ?= kubedb
 BIN      := mariadb
 IMAGE    := $(REGISTRY)/$(BIN)
-TAG      := 10.5
+TAG      := 10.5.8
 
 .PHONY: push
 push: container
